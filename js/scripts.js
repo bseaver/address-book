@@ -2,10 +2,28 @@
 function Contact(first, last) {
   this.firstName = first;
   this.lastName = last;
+  this.addresses = [];
 }
+
+Contact.prototype.fullName = function() {
+  return this.firstName + " " + this.lastName;
+}
+
+function Address(street, city, state) {
+  this.street = street;
+  this.city = city;
+  this.state = state;
+}
+
+
 
 // user interface logic
 $(document).ready(function() {
+  var addressHTML = $("#new-addresses").html();
+  $("#add-address").click(function() {
+    $("#new-addresses").append(addressHTML);
+  });
+
   $("form#new-contact").submit(function(event) {
     event.preventDefault();
 
@@ -14,7 +32,7 @@ $(document).ready(function() {
 
     var newContact = new Contact(inputtedFirstName, inputtedLastName);
 
-    $("ul#contacts").append("<li><span class='contact'>" + newContact.firstName + "</span></li>");
+    $("ul#contacts").append("<li><span class='contact'>" + newContact.fullName() + "</span></li>");
 
     $(".contact").last().click(function() {
       $("#show-contact").show();
