@@ -15,6 +15,15 @@ function Address(street, city, state) {
   this.state = state;
 }
 
+Address.prototype.oneLine = function() {
+  var result = "";
+  var thisAddress = this;
+  ["street", "city", "state"].forEach(function(addressPart) {
+    result += (result?", ":"") + thisAddress[addressPart];
+  });
+  return result;
+}
+
 
 
 // user interface logic
@@ -36,6 +45,16 @@ $(document).ready(function() {
 
     var newContact = new Contact(inputtedFirstName, inputtedLastName);
 
+    $(".new-address").each(function() {
+      newContact.addresses.push(
+        new Address(
+          $(this).find("input.new-street").val(),
+          $(this).find("input.new-city").val(),
+          $(this).find("input.new-state").val()
+        )
+      )
+    });
+
     $("ul#contacts").append("<li><span class='contact'>" + newContact.fullName() + "</span></li>");
 
     $(".contact").last().click(function() {
@@ -43,6 +62,11 @@ $(document).ready(function() {
       $("#show-contact h2").text(newContact.firstName);
       $(".first-name").text(newContact.firstName);
       $(".last-name").text(newContact.lastName);
+
+      $("#show-contact ul").children().remove();
+      newContact.addresses.forEach(function(address) {
+        $("#show-contact ul").append("<li>" + address.oneLine() + "</li>")
+      });
     });
 
     $("input#new-first-name").val("");
